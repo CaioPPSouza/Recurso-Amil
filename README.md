@@ -54,6 +54,8 @@ Fluxo recomendado:
   - `Encerrar`.
 - Sempre que ocorre erro (nao encontrado ou falha de preenchimento), o sistema salva screenshot em `reports/screenshots/`.
 - Regra especial: quando `codigo_glosa` for `3052`, o sistema **nao preenche valor** e usa `//*[@id='justificativa_guia']` para justificar.
+- Regra especial: quando `codigo_glosa` for `3052` ou `1702`, o sistema **nao preenche valor** e usa `//*[@id='justificativa_guia']`.
+- Regra de fallback: se o primeiro campo de justificativa estiver indisponivel, o sistema tenta o segundo campo e, nesse caso, tambem nao preenche valor.
 
 ## Relatorio final
 

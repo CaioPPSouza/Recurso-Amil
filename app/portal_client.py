@@ -37,8 +37,17 @@ def is_glosa_3052(codigo_glosa: str | None) -> bool:
     return normalize_glosa_code(codigo_glosa) == "3052"
 
 
+def is_glosa_1702(codigo_glosa: str | None) -> bool:
+    return normalize_glosa_code(codigo_glosa) == "1702"
+
+
+def requires_secondary_justificativa(codigo_glosa: str | None) -> bool:
+    code = normalize_glosa_code(codigo_glosa)
+    return code in {"3052", "1702"}
+
+
 def resolve_justificativa_selector(codigo_glosa: str | None, settings: AppSettings) -> str:
-    if is_glosa_3052(codigo_glosa) and settings.selectors.justificativa_3052:
+    if requires_secondary_justificativa(codigo_glosa) and settings.selectors.justificativa_3052:
         return settings.selectors.justificativa_3052
     return settings.selectors.justificativa
 
@@ -137,11 +146,18 @@ class PortalClient:
         codigo_glosa: str | None = None,
     ) -> None:
         selectors = self.settings.selectors
-        if not is_glosa_3052(codigo_glosa):
-            valor_text = f"{valor_glosa:.2f}".replace(".", ",")
-            self._fill(selectors.valor_glosa, valor_text)
-        justificativa_selector = resolve_justificativa_selector(codigo_glosa, self.settings)
-        self._fill(justificativa_selector, justificativa)
+        if requires_secondary_justificativa(codigo_glosa):
+            self._fill(selectors.justificativa_3052, justificativa)
+            return
+
+        try:
+            self._fill(selectors.justificativa, justificativa)
+        except Exception:
+            self._fill(selectors.justificativa_3052, justificativa)
+            return
+
+        valor_text = f"{valor_glosa:.2f}".replace(".", ",")
+        self._fill(selectors.valor_glosa, valor_text)
 
     def click_next_guide(self) -> None:
         locator = self._find_locator(self.settings.selectors.proxima_guia)

@@ -1,6 +1,8 @@
 from app.portal_client import resolve_selector
 from app.portal_client import find_locator_in_pages
 from app.portal_client import is_glosa_3052
+from app.portal_client import is_glosa_1702
+from app.portal_client import requires_secondary_justificativa
 from app.portal_client import resolve_justificativa_selector
 from app.config import AppSettings
 
@@ -70,10 +72,26 @@ def test_is_glosa_3052_accepts_plain_or_formatted_code():
     assert not is_glosa_3052("3030")
 
 
-def test_resolve_justificativa_selector_uses_special_xpath_for_3052():
+def test_is_glosa_1702_accepts_plain_or_formatted_code():
+    assert is_glosa_1702("1702")
+    assert is_glosa_1702("1702 - pacote")
+    assert not is_glosa_1702("3030")
+
+
+def test_requires_secondary_justificativa_for_3052_and_1702():
+    assert requires_secondary_justificativa("3052")
+    assert requires_secondary_justificativa("1702")
+    assert not requires_secondary_justificativa("3030")
+
+
+def test_resolve_justificativa_selector_uses_special_xpath_for_3052_and_1702():
     settings = AppSettings()
     assert (
         resolve_justificativa_selector("3052", settings)
+        == "//*[@id='justificativa_guia']"
+    )
+    assert (
+        resolve_justificativa_selector("1702", settings)
         == "//*[@id='justificativa_guia']"
     )
     assert (

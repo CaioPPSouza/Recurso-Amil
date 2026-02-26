@@ -1,0 +1,17 @@
+{
+  "debug_port": 9222,
+  "timeout_ms": 15000,
+  "chrome_binary": null,
+  "portal_url": "https://credenciado.amil.com.br/",
+  "selectors": {
+    "numero_guia": "//*[@id='num_guia_operadora_recurso']",
+    "senha": "//*[@id='senha']",
+    "lote": "",
+    "protocolo": "",
+    "total_guias": "//*[@id='guia_final']",
+    "valor_glosa": "//*[@id='valor_recursado']",
+    "justificativa": "//*[@id='justificativa_prestador_procedimento']",
+    "justificativa_3052": "//*[@id='justificativa_guia']",
+    "proxima_guia": "//*[@id='btn_guia_posterior']"
+  }
+}
